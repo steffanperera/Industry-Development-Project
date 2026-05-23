@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const db = require('./db');
 const user = require('./routes/userRoutes');
+const caregiver = require('./routes/caregiversRoutes');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/user', user);
+app.use('/api/caregivers', caregiver);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
