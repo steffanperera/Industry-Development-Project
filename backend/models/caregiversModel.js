@@ -97,10 +97,37 @@ const saveSkills = (caregiverId, skills, callback) => {
   db.query(sql, [values], callback);
 };
 
+
+
+// Save caregiver quiz answers with correct answer comparison
+const saveCaregiverAnswers = (answers) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      INSERT INTO caregiver_questions 
+      (caregiverId, q_id, answer, correct_answer, is_correct)
+      VALUES ?
+    `;
+
+    const values = answers.map((a) => [
+      a.caregiverId,
+      a.q_id,
+      a.answer,
+      a.correct_answer,
+      a.is_correct,
+    ]);
+
+    db.query(query, [values], (err, result) => {
+      if (err) return reject(err);
+      resolve(result);
+    });
+  });
+};
+
 module.exports = {
   createCaregiver,
   saveCareTypes,
   saveSkills,
+  saveCaregiverAnswers,
   getOne,
   getAll,
 };

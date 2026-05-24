@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const caregiverModel = require('../models/caregiversModel');
+const db = require('../db');
 
 // POST /api/caregivers/register — register a new caregiver
 router.post('/register', (req, res) => {
@@ -33,6 +34,75 @@ router.post('/register', (req, res) => {
       });
     });
   });
+});
+
+// POST /api/caregivers/crquestions — submit quiz answers, grade and save
+router.post('/crquestions', (req, res) => {
+  try {
+    const { caregiverId, answers } = req.body;
+    console.log(req.body);
+
+    if (!caregiverId || !answers || answers.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid data',
+      });
+    }
+
+    // Fetch correct answers from DB
+    const q_ids = answers.map((a) => a.q_id);
+
+    const query = `
+      SELECT q_id, correct_answer
+      FROM questions
+      WHERE q_id IN (?)
+    `;
+
+    db.query(query, [q_ids], async (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ success: false });
+      }
+
+      // Build correct answer lookup map
+      const correctMap = {};
+      results.forEach((q) => {
+        correctMap[q.q_id] = q.correct_answer;
+      });
+
+      // Attach correct answer and is_correct flag to each submitted answer
+      const finalAnswers = answers.map((a) => {
+        const correct = correctMap[a.q_id];
+        return {
+          caregiverId,
+          q_id: a.q_id,
+          answer: a.answer,
+          correct_answer: correct,
+          is_correct: parseInt(a.answer) === parseInt(correct) ? 1 : 0,
+        };
+      });
+
+      // Save to DB
+      await caregiverModel.saveCaregiverAnswers(finalAnswers);
+
+      // Calculate score
+      const score = finalAnswers.filter((a) => a.is_correct === 1).length;
+      const total = finalAnswers.length;
+
+      res.json({
+        success: true,
+        message: 'Quiz submitted',
+        score,
+        total,
+      });
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
+  }
 });
 
 // GET /api/caregivers/getone/:caregiverId — fetch single caregiver profile
