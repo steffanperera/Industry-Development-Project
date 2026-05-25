@@ -1,4 +1,5 @@
-const db = require('../config/db');
+// models/questionsModel.js
+const db = require("../config/db"); // your mysql connection
 
 // Get 5 random questions for a given type
 const getRandomQuestionsByType = (type) => {
@@ -21,12 +22,12 @@ const getRandomQuestionsByType = (type) => {
   });
 };
 
-// Get 5 questions from each type (SB_mcq + CK_mcq)
+// Get both types (SB_mcq + CK_mcq)
 const getAllRandomQuestions = async () => {
   try {
-    const sbQuestions = await getRandomQuestionsByType('SB_mcq');
-    const ckQuestions = await getRandomQuestionsByType('CK_mcq');
-
+    const sbQuestions = await getRandomQuestionsByType("SB_mcq");
+    const ckQuestions = await getRandomQuestionsByType("CK_mcq");
+    //console.log(sbQuestions);
     return {
       SB_mcq: sbQuestions,
       CK_mcq: ckQuestions,
