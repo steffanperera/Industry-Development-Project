@@ -123,6 +123,35 @@ const saveCaregiverAnswers = (answers) => {
   });
 };
 
+
+// Fetch quiz score + experience/qualification fields for scoring calculation
+const getquestionsscore = (caregiverId, callback) => {
+  const sql = `
+    SELECT 
+      caregivers.experience_years,
+      caregivers.has_certifications,
+      caregivers.certification_list,
+
+      SUM(
+        CASE 
+          WHEN caregiver_questions.is_correct = 1 THEN 2.5
+          ELSE 0
+        END
+      ) AS quiz_score
+
+    FROM caregiver_questions
+
+    JOIN caregivers
+      ON caregivers.id = caregiver_questions.caregiverId
+
+    WHERE caregiver_questions.caregiverId = ?
+
+    GROUP BY caregiver_questions.caregiverId
+  `;
+
+  db.query(sql, [caregiverId], callback);
+};
+
 module.exports = {
   createCaregiver,
   saveCareTypes,
@@ -130,4 +159,5 @@ module.exports = {
   saveCaregiverAnswers,
   getOne,
   getAll,
+  getquestionsscore,
 };

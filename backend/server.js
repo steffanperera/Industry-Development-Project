@@ -6,6 +6,7 @@ const db = require('./db');
 const user = require('./routes/userRoutes');
 const caregiver = require('./routes/caregiversRoutes');
 const questionsRoutes = require('./routes/questionsRoutes');
+const admin = require('./routes/adminRoutes');
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 app.use('/api/user', user);
 app.use('/api/caregivers', caregiver);
 app.use('/api/questions', questionsRoutes);
+app.use('/api/admin', admin);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
