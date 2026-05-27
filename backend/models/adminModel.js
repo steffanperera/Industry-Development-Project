@@ -1,24 +1,17 @@
 const db = require('../db');
 const bcrypt = require('bcrypt');
 
-
 const User = {
     getAll: (callback) => {
         db.query('SELECT * FROM user', callback);
     },
     check: async (User, callback) => {
-        const { username,password} = User;
-        //const hashedPassword = await bcrypt.hash(password, 10);
-        //db.query('UPDATE users SET password= $1',[hashedPassword]);
-        db.query('SELECT * FROM user WHERE userName = ?', [username], 
+        const { username, password } = User;
+        db.query('SELECT * FROM user WHERE userName = ? AND userRole="ADMIN"', [username],
             (err, results) => {
-    //console.log(err);
-    if (err) return callback(err, null);
-
-   // console.log(results); 
-    
-    callback(null, results);
-  }
+                if (err) return callback(err, null);
+                callback(null, results);
+            }
         );
     }
 };
