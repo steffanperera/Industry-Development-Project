@@ -4,7 +4,7 @@ const caregiverModel = require('../models/caregiversModel');
 const userModel = require('../models/userModel');
 const db = require('../db');
 
-// GET /api/caregivers — get all caregivers
+// GET /api/caregivers
 router.get('/', (req, res) => {
   caregiverModel.getAll((err, results) => {
     if (err) return res.status(500).json(err);
@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
   });
 });
 
-// POST /api/caregivers/register — register caregiver + create user account
+// POST /api/caregivers/register
 router.post('/register', (req, res) => {
   const data = req.body;
 
@@ -22,21 +22,15 @@ router.post('/register', (req, res) => {
       return res.status(500).json({ message: 'Error saving caregiver' });
     }
 
-    // Save to user table for centralised auth
     userModel.SaveUser(data, hashedPassword, 'CAREGIVER', (err, userId) => {
-      if (err) {
-        console.error(err);
-      }
+      if (err) console.error(err);
     });
 
-    res.json({
-      message: 'Caregiver registered successfully',
-      caregiverId,
-    });
+    res.json({ message: 'Caregiver registered successfully', caregiverId });
   });
 });
 
-// POST /api/caregivers/crquestions — submit quiz answers
+// POST /api/caregivers/crquestions — save raw answers, attempt tracked in model
 router.post('/crquestions', (req, res) => {
   try {
     const { caregiverId, answers } = req.body;
@@ -47,7 +41,7 @@ router.post('/crquestions', (req, res) => {
     }
 
     const q_ids = answers.map((a) => a.q_id);
-    const query = `SELECT q_id, correct_answer FROM questions WHERE q_id IN (?)`;
+    const query = `SELECT q_id FROM questions WHERE q_id IN (?)`;
 
     db.query(query, [q_ids], async (err, results) => {
       if (err) {
@@ -55,19 +49,11 @@ router.post('/crquestions', (req, res) => {
         return res.status(500).json({ success: false });
       }
 
-      const correctMap = {};
-      results.forEach((q) => { correctMap[q.q_id] = q.correct_answer; });
-
-      const finalAnswers = answers.map((a) => {
-        const correct = correctMap[a.q_id];
-        return {
-          caregiverId,
-          q_id: a.q_id,
-          answer: a.answer,
-          correct_answer: correct,
-          is_correct: parseInt(a.answer) === parseInt(correct) ? 1 : 0,
-        };
-      });
+      const finalAnswers = answers.map((a) => ({
+        caregiverId,
+        q_id: a.q_id,
+        answer: a.answer,
+      }));
 
       await caregiverModel.saveCaregiverAnswers(finalAnswers);
 
@@ -98,29 +84,35 @@ router.get('/getonebyemail/:userName', (req, res) => {
   });
 });
 
-// GET /api/caregivers/getscore/:caregiverId
-router.get('/getscore/:caregiverId', (req, res) => {
-  caregiverModel.getquestionsscore(req.params.caregiverId, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ success: false, message: 'Server error' });
+// GET /api/caregivers/getscore/:caregiverId/:attempt
+router.get('/getscore/:caregiverId/:attempt', (req, res) => {
+  caregiverModel.getquestionsscore(
+    req.params.caregiverId,
+    req.params.attempt,
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, message: 'Server error' });
+      }
+
+      if (results.length === 0) {
+        return res.json({ success: false, message: 'No data found' });
+      }
+
+      const data = results[0];
+      const quizScore = Number(data.quiz_score || 0);
+      console.log(quizScore);
+
+      const totalScore = quizScore;
+
+      res.json({
+        success: true,
+        caregiverId: req.params.caregiverId,
+        quizScore,
+        totalScore,
+      });
     }
-
-    if (results.length === 0) {
-      return res.json({ success: false, message: 'No data found' });
-    }
-
-    const data = results[0];
-    const quizScore = Number(data.quiz_score || 0);
-    const totalScore = quizScore;
-
-    res.json({
-      success: true,
-      caregiverId: req.params.caregiverId,
-      quizScore,
-      totalScore,
-    });
-  });
+  );
 });
 
 // GET /api/caregivers/getgrade/:score
@@ -129,10 +121,10 @@ router.get('/getgrade/:score', (req, res) => {
     const score = Number(req.params.score);
     let grade = '';
 
-    if      (score >= 80) grade = 'A';
-    else if (score >= 60) grade = 'B';
-    else if (score >= 40) grade = 'C';
-    else                  grade = 'F';
+    if      (score >= 40) grade = 'Strength area – High demonstrated capability';
+    else if (score >= 30) grade = 'Growth area – Developing competency';
+    else if (score >= 10) grade = 'Support area – Targeted learning recommended';
+    else                  grade = 'Try Again';
 
     res.json({ success: true, score, grade });
   } catch (error) {
