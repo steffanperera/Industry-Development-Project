@@ -1,5 +1,5 @@
-const db = require('../db');
-const bcrypt = require('bcrypt');
+const db = require("../db");
+const bcrypt = require("bcrypt");
 
 const saltRounds = 10;
 
@@ -12,7 +12,10 @@ async function hashPassword(plainPassword) {
    GET ALL EMPLOYERS
 ========================= */
 const getAll = (callback) => {
-  const sql = `SELECT * FROM employer`;
+  const sql = `
+    SELECT * FROM employer
+  `;
+
   db.query(sql, callback);
 };
 
@@ -20,7 +23,11 @@ const getAll = (callback) => {
    GET SINGLE EMPLOYER
 ========================= */
 const getOne = (empId, callback) => {
-  const sql = `SELECT * FROM employer WHERE empId = ?`;
+  const sql = `
+    SELECT * FROM employer
+    WHERE empId = ?
+  `;
+
   db.query(sql, [empId], callback);
 };
 
@@ -30,13 +37,29 @@ const getOne = (empId, callback) => {
 const searchEmployers = (keyword, callback) => {
   const sql = `
     SELECT * FROM employer
-    WHERE
-      first_name LIKE ? OR last_name LIKE ? OR
-      email LIKE ? OR mobile LIKE ? OR
-      companyName LIKE ? OR city LIKE ?
+    WHERE 
+      first_name LIKE ?
+      OR last_name LIKE ?
+      OR email LIKE ?
+      OR mobile LIKE ?
+      OR companyName LIKE ?
+      OR city LIKE ?
   `;
-  const s = `%${keyword}%`;
-  db.query(sql, [s, s, s, s, s, s], callback);
+
+  const searchValue = `%${keyword}%`;
+
+  db.query(
+    sql,
+    [
+      searchValue,
+      searchValue,
+      searchValue,
+      searchValue,
+      searchValue,
+      searchValue,
+    ],
+    callback
+  );
 };
 
 /* =========================
@@ -46,10 +69,18 @@ const filterEmployers = (city, status, callback) => {
   let sql = `SELECT * FROM employer WHERE 1=1`;
   let values = [];
 
-  if (city)   { sql += ` AND city = ?`;   values.push(city); }
-  if (status) { sql += ` AND status = ?`; values.push(status); }
+  if (city) {
+    sql += ` AND city = ?`;
+    values.push(city);
+  }
+
+  if (status) {
+    sql += ` AND status = ?`;
+    values.push(status);
+  }
 
   sql += ` ORDER BY empId DESC`;
+
   db.query(sql, values, callback);
 };
 
@@ -62,8 +93,18 @@ const createEmployer = async (data, callback) => {
 
     const sql = `
       INSERT INTO employer
-      (first_name, last_name, dob, mobile, email,
-       companyName, address, city, password, status)
+      (
+        first_name,
+        last_name,
+        dob,
+        mobile,
+        email,
+        companyName,
+        address,
+        city,
+        password,
+        status
+      )
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
@@ -77,11 +118,12 @@ const createEmployer = async (data, callback) => {
       data.address,
       data.city,
       hashedPassword,
-      'ACT',
+      "ACT",
     ];
 
     db.query(sql, values, (err, result) => {
       if (err) return callback(err);
+
       callback(null, result.insertId, hashedPassword);
     });
   } catch (error) {
@@ -96,18 +138,33 @@ const updateEmployer = async (empId, data, callback) => {
   try {
     let sql = `
       UPDATE employer SET
-        first_name = ?, last_name = ?, dob = ?,
-        mobile = ?, email = ?, companyName = ?,
-        address = ?, city = ?, status = ?
+        first_name = ?,
+        last_name = ?,
+        dob = ?,
+        mobile = ?,
+        email = ?,
+        companyName = ?,
+        address = ?,
+        city = ?,
+        status = ?
     `;
+
     let values = [
-      data.firstName, data.lastName, data.dob,
-      data.mobile, data.email, data.companyName,
-      data.address, data.city, data.status,
+      data.firstName,
+      data.lastName,
+      data.dob,
+      data.mobile,
+      data.email,
+      data.companyName,
+      data.address,
+      data.city,
+      data.status,
     ];
 
-    if (data.password && data.password.trim() !== '') {
+    // Update password only if provided
+    if (data.password && data.password.trim() !== "") {
       const hashedPassword = await hashPassword(data.password);
+
       sql += `, password = ?`;
       values.push(hashedPassword);
     }
@@ -122,19 +179,26 @@ const updateEmployer = async (empId, data, callback) => {
 };
 
 /* =========================
-   DELETE EMPLOYER (SOFT)
+   DELETE EMPLOYER
+   (SOFT DELETE)
 ========================= */
 const deleteEmployer = (empId, callback) => {
-  const sql = `UPDATE employer SET status = 'DEL' WHERE empId = ?`;
+  const sql = `
+    UPDATE employer
+    SET status = 'DEL'
+    WHERE empId = ?
+  `;
+
   db.query(sql, [empId], callback);
 };
 
-/* =========================
-   GET BY EMAIL
-========================= */
-const getonebyemail = (userName, callback) => {
-  const sql = `SELECT * FROM employer WHERE email = ?`;
-  db.query(sql, userName, callback);
+const getonebyemail = (userName,callback) => {
+//console.log(caregiverId);
+  const sql = `SELECT * FROM employer WHERE email=? `;
+
+  const id=userName;
+  db.query(sql, id, callback);
+  
 };
 
 module.exports = {
