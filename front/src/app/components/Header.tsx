@@ -1,6 +1,7 @@
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,25 +16,34 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-gray-700 hover:text-green-600 transition-colors">
+            <HashLink
+          to="/#features" className="text-gray-700 hover:text-green-600 transition-colors">
               Features
-            </a>
-            <a href="#how-it-works" className="text-gray-700 hover:text-green-600 transition-colors">
+            </HashLink>
+            <HashLink
+          to="/#how-it-works" className="text-gray-700 hover:text-green-600 transition-colors">
               How It Works
-            </a>
-            <a href="#about" className="text-gray-700 hover:text-green-600 transition-colors">
-              About
-            </a>
+              </HashLink>
             <Link
-              to="/signin"
-              className="px-4 py-2 text-green-600 hover:text-green-700 transition-colors"
-            >
-              Sign In
+          to="/aboutus" className="text-gray-700 hover:text-green-600 transition-colors">
+              About Us
             </Link>
             <Link
-              to="/register"
-              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-            >
+          to="/contactus" className="text-gray-700 hover:text-green-600 transition-colors">
+              Contact Us
+            </Link>
+
+          
+            
+        <Link
+          to="/signin"
+          className="px-4 py-2 text-green-600 hover:text-green-700 transition-colors"
+        >
+          Sign In
+        </Link>
+      
+            <Link
+          to="/register" className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
               Register Now
             </Link>
           </nav>
@@ -60,15 +70,12 @@ export function Header() {
               <a href="#about" className="text-gray-700 hover:text-green-600 transition-colors">
                 About
               </a>
-              <Link to="/signin" className="text-green-600 hover:text-green-700 transition-colors">
+              <button className="text-left text-green-600 hover:text-green-700 transition-colors">
                 Sign In
-              </Link>
-              <Link
-                to="/register"
-                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-center"
-              >
+              </button>
+              <button className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-left">
                 Register Now
-              </Link>
+              </button>
             </div>
           </nav>
         )}
