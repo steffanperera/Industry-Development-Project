@@ -11,10 +11,12 @@ import { AboutUs }           from "./components/AboutUs";
 import { ContactUs }         from "./components/ContactUs";
 import Quiz                  from "./components/Quiz";
 import Certificate           from "./components/Certificate";
+import Onboarding            from "./components/Onboarding";
+import CertificateList       from "./components/CertificateList";
 
 import { AdminSignIn } from "./admin/AdminSignIn";
 import Dashboard       from "./admin/Admin";
-import Caregiverlist   from "./admin/Caregiverlist";
+import CaregiverList   from "./admin/Caregiverlist";
 
 import MyProfile from "./caregiver/Myprofile";
 
@@ -25,30 +27,31 @@ export default function App() {
 
         {/* PUBLIC ROUTES */}
         <Route element={<PublicLayout />}>
-          <Route path="/"         element={<Indexpage />} />
-          <Route path="/index"    element={<Indexpage />} />
-          <Route path="/signin"   element={<SignIn />} />
-          <Route path="/register" element={<CaregiverRegister />} />
-          <Route path="/aboutus"  element={<AboutUs />} />
+          <Route path="/"          element={<Indexpage />} />
+          <Route path="/index"     element={<Indexpage />} />
+          <Route path="/signin"    element={<SignIn />} />
+          <Route path="/register"  element={<CaregiverRegister />} />
+          <Route path="/aboutus"   element={<AboutUs />} />
           <Route path="/contactus" element={<ContactUs />} />
-          <Route path="/quize/:caregiverId"       element={<Quiz />} />
-          <Route path="/certificate/:caregiverId" element={<Certificate />} />
+          <Route path="/certificate/:caregiverId"        element={<Certificate />} />
+          <Route path="/onboarding/:caregiverId"         element={<Onboarding />} />
         </Route>
 
         {/* ADMIN ROUTES */}
-        <Route path="/dashboard" element={<AdminLayout />}>
-          <Route index element={<Dashboard />} />
-        </Route>
-        <Route path="/caregiverlist" element={<AdminLayout />}>
-          <Route index element={<Caregiverlist />} />
+        <Route element={<AdminLayout />}>
+          <Route path="/dashboard"      element={<Dashboard />} />
+          <Route path="/caregiverlist"  element={<CaregiverList />} />
         </Route>
         <Route path="/admin">
           <Route index element={<AdminSignIn />} />
         </Route>
 
         {/* CAREGIVER ROUTES */}
-        <Route path="/myprofile/:myid" element={<CaregiverLayout />}>
-          <Route index element={<MyProfile />} />
+        <Route element={<CaregiverLayout />}>
+          <Route path="/myprofile/:myid"                      element={<MyProfile />} />
+          <Route path="/quize/:caregiverId/:limit"            element={<Quiz />} />
+          <Route path="/mycertificate/:caregiverId/:attempt"  element={<Certificate />} />
+          <Route path="/CertificateList/:caregiverId"         element={<CertificateList />} />
         </Route>
 
       </Routes>
