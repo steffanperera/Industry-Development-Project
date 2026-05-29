@@ -145,4 +145,44 @@ router.get('/certificatelist/:caregiverId', (req, res) => {
   });
 });
 
+
+// ===================================
+// POST — insert onboarding data
+// ===================================
+router.post('/onboarding', async (req, res) => {
+  try {
+    const result = await caregiverModel.insertCaregiverOnboarding(req.body);
+    res.status(201).json({ success: true, message: 'Onboarding data saved successfully', data: result });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: 'Failed to save onboarding data' });
+  }
+});
+
+// ===================================
+// GET — onboarding data by caregiver ID
+// ===================================
+router.get('/onboarding/:caregiverId', async (req, res) => {
+  try {
+    const data = await caregiverModel.getCaregiverOnboardingById(req.params.caregiverId);
+    res.status(200).json({ success: true, data });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: 'Failed to fetch onboarding data' });
+  }
+});
+
+// ===================================
+// PUT — update onboarding data
+// ===================================
+router.put('/onboarding/:caregiverId', async (req, res) => {
+  try {
+    const result = await caregiverModel.updateCaregiverOnboarding(req.params.caregiverId, req.body);
+    res.status(200).json({ success: true, message: 'Onboarding data updated successfully', data: result });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: 'Failed to update onboarding data' });
+  }
+});
+
 module.exports = router;
