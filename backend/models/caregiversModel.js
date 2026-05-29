@@ -221,6 +221,108 @@ const getAssessmentslist = (caregiverId, callback) => {
   db.query(sql, caregiverId, callback);
 };
 
+
+// =========================
+// Insert Caregiver Onboarding
+// =========================
+const insertCaregiverOnboarding = (data) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      INSERT INTO caregiver_onboarding (
+        caregiverId,
+        current_work_status,
+        looking_for_work,
+        applied_jobs_4weeks,
+        industry_interest,
+        speak_other_language,
+        other_language,
+        heard_about_app,
+        reason_for_joining,
+        care_for,
+        cared_person_age_range,
+        care_categories,
+        caregiving_duration
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    const values = [
+      data.caregiverId,
+      data.current_work_status,
+      data.looking_for_work,
+      data.applied_jobs_4weeks,
+      data.industry_interest,
+      data.speak_other_language,
+      data.other_language,
+      data.heard_about_app,
+      data.reason_for_joining,
+      data.care_for,
+      data.cared_person_age_range,
+      data.care_categories,
+      data.caregiving_duration,
+    ];
+    db.query(query, values, (err, result) => {
+      if (err) reject(err);
+      else resolve(result);
+    });
+  });
+};
+
+// =========================
+// Get Onboarding By Caregiver ID
+// =========================
+const getCaregiverOnboardingById = (caregiverId) => {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM caregiver_onboarding WHERE caregiverId = ?`;
+    db.query(query, [caregiverId], (err, results) => {
+      if (err) reject(err);
+      else resolve(results[0]);
+    });
+  });
+};
+
+// =========================
+// Update Onboarding
+// =========================
+const updateCaregiverOnboarding = (caregiverId, data) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      UPDATE caregiver_onboarding SET
+        current_work_status = ?,
+        looking_for_work = ?,
+        applied_jobs_4weeks = ?,
+        industry_interest = ?,
+        speak_other_language = ?,
+        other_language = ?,
+        heard_about_app = ?,
+        reason_for_joining = ?,
+        care_for = ?,
+        cared_person_age_range = ?,
+        care_categories = ?,
+        caregiving_duration = ?
+      WHERE caregiverId = ?
+    `;
+    const values = [
+      data.current_work_status,
+      data.looking_for_work,
+      data.applied_jobs_4weeks,
+      data.industry_interest,
+      data.speak_other_language,
+      data.other_language,
+      data.heard_about_app,
+      data.reason_for_joining,
+      data.care_for,
+      data.cared_person_age_range,
+      data.care_categories,
+      data.caregiving_duration,
+      caregiverId,
+    ];
+    db.query(query, values, (err, result) => {
+      if (err) reject(err);
+      else resolve(result);
+    });
+  });
+};
+
 module.exports = {
   createCaregiver,
   saveCareTypes,
@@ -236,4 +338,7 @@ module.exports = {
   searchCaregivers,
   filterCaregivers,
   getAssessmentslist,
+  insertCaregiverOnboarding,
+  getCaregiverOnboardingById,
+  updateCaregiverOnboarding,
 };
