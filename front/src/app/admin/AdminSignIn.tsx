@@ -1,3 +1,4 @@
+import { Heart, Shield, DollarSign, Clock, Users, Award } from 'lucide-react';
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +14,9 @@ export function AdminSignIn() {
     username: "",
     password: "",
   });
+  
+  // State to hold backend validation errors
+  const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -20,11 +24,14 @@ export function AdminSignIn() {
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    // Clear error message when user starts typing again
+    if (error) setError(null);
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(form);
+    setError(null); // Reset error state on new submit attempt
+
     try {
       const response = await axios.post(
         `${API_BASE_URL}/admin`,
@@ -33,11 +40,19 @@ export function AdminSignIn() {
 
       console.log(response.data);
       alert("Login successful!");
+      
+      // Redirect to dashboard page
+      navigate("/admin/dashboard");
 
-      navigate("/dashboard");
-
-    } catch (error) {
-      console.error(error);
+    } catch (err: any) {
+      console.error(err);
+      
+      // Extract custom error message from backend response if available
+      if (err.response && err.response.data && (err.response.data.message || err.response.data.error)) {
+        setError(err.response.data.message || err.response.data.error);
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
@@ -47,6 +62,14 @@ export function AdminSignIn() {
         <h2 className="text-2xl font-bold text-[#00a63e] mb-6">
           Admin Sign In
         </h2>
+
+        {/* Error Alert Box */}
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-md text-left font-medium">
+            {error}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="text-left">
             <label className="block text-sm mb-1">Username</label>

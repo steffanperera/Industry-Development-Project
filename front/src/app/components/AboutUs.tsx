@@ -1,7 +1,20 @@
+const goals = [
+  "Help hidden carers recognise and understand their caregiving skills",
+  "Provide a simple self-assessment platform for caregivers",
+  "Match caregiving abilities with recognised professional skill categories",
+  "Support career growth and future employment opportunities",
+  "Generate digital certificates based on completed assessments"
+];
+
+const purposes = [
+  "Digitally recognise informal caregiving experience",
+  "Support carers with professional development pathways",
+  "Provide accessible online self-assessment tools",
+  "Improve awareness of caregiver wellbeing and support needs"
+];
 export function AboutUs() {
   return (
     <div className="bg-gray-50 text-gray-800">
-
       {/* Hero Section */}
       <div className="bg-green-600 text-white py-16 px-6 text-center">
         <h1 className="text-4xl font-bold mb-4">About CareAble</h1>
@@ -13,13 +26,13 @@ export function AboutUs() {
 
       {/* Content Section */}
       <div className="max-w-6xl mx-auto px-6 py-12 space-y-12">
-
+        
         {/* Introduction */}
         <section>
           <h2 className="text-2xl font-semibold mb-4">Who We Are</h2>
           <p className="text-gray-600 leading-relaxed">
             CareAble is a digital platform designed to help individuals and
-            families find trusted caregivers easily and confidently. We simplify
+            families find trusted caregivers and confidently. We simplify
             the process of connecting caregivers with those who need care,
             ensuring safety, reliability, and convenience.
           </p>
@@ -28,27 +41,32 @@ export function AboutUs() {
         {/* Mission & Vision */}
         <section className="grid md:grid-cols-2 gap-8">
           <div className="bg-white shadow-md rounded-2xl p-6">
-            <h3 className="text-xl font-semibold mb-3 text-green-600">Our Mission</h3>
-            <ul className="list-disc list-inside text-gray-600 space-y-2">
-              <li>Provide safe and reliable caregiving services</li>
-              <li>Empower caregivers with better opportunities</li>
-              <li>Help families find trusted care providers</li>
-              <li>Improve accessibility using technology</li>
+            <h3 className="text-xl font-semibold mb-3 text-green-600">
+              Our Mission
+            </h3>
+            <ul style={{ listStyleType: 'none', paddingLeft: 0 }} >
+              
+              {goals.map((goal, index) => (
+                  <li key={index}>💚 {goal}</li>
+                  ))}
             </ul>
           </div>
+
           <div className="bg-white shadow-md rounded-2xl p-6">
-            <h3 className="text-xl font-semibold mb-3 text-green-600">Our Vision</h3>
+            <h3 className="text-xl font-semibold mb-3 text-green-600">
+              Our Vision
+            </h3>
             <p className="text-gray-600">
-              To become a leading caregiving platform that builds trust,
-              enhances service quality, and promotes dignity and well-being for
-              everyone.
+              A platform enabling formal recognition of hidden carers’ informal caregiving capabilities.
             </p>
           </div>
         </section>
 
         {/* Services */}
         <section>
-          <h2 className="text-2xl font-semibold mb-6 text-center">What We Offer</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-center">
+            What We Offer
+          </h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
             {[
               "Elderly Care",
@@ -58,8 +76,13 @@ export function AboutUs() {
               "Verified Caregivers",
               "Secure Communication",
             ].map((service, index) => (
-              <div key={index} className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
-                <h4 className="font-semibold text-lg text-green-600">{service}</h4>
+              <div
+                key={index}
+                className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition"
+              >
+                <h4 className="font-semibold text-lg text-green-600">
+                  {service}
+                </h4>
               </div>
             ))}
           </div>
@@ -67,7 +90,9 @@ export function AboutUs() {
 
         {/* Why Choose Us */}
         <section className="bg-green-50 rounded-2xl p-8">
-          <h2 className="text-2xl font-semibold mb-4 text-center">Why Choose CareAble?</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-center">
+            Why Choose CareAble?
+          </h2>
           <div className="grid md:grid-cols-2 gap-4 text-gray-700">
             <p>✔ Easy-to-use platform</p>
             <p>✔ Verified caregiver profiles</p>
