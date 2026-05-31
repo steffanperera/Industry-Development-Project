@@ -1,12 +1,15 @@
+// components/MyProfile.tsx
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 const API_BASE_URL = "http://localhost:5000/api";
 
 interface Caregiver {
   id: number;
-  full_name: string;
+  first_name: string;
+  last_name: string;
   dob: string;
   gender: string;
   nic_passport: string;
@@ -31,101 +34,291 @@ interface Caregiver {
   created_at: string;
 }
 
+interface Onboarding {
+  current_work_status: string;
+  looking_for_work: string;
+  applied_jobs_4weeks: string;
+  industry_interest: string;
+
+  speak_other_language: string;
+  other_language: string;
+
+  heard_about_app: string;
+  reason_for_joining: string;
+
+  care_for: string;
+  cared_person_age_range: string;
+  care_categories: string;
+  caregiving_duration: string;
+}
+
 const MyProfile = () => {
+
   const { myid } = useParams();
+
   const [caregiver, setCaregiver] = useState<Caregiver | null>(null);
+
+  const [onboarding, setOnboarding] =
+    useState<Onboarding | null>(null);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchCaregiver = async () => {
+
+    const fetchData = async () => {
+
       try {
-        const res = await axios.get(`${API_BASE_URL}/caregivers/getone/${myid}`);
-        console.log(res.data);
-        setCaregiver(res.data[0]);
+
+        // ==========================
+        // Get Caregiver Details
+        // ==========================
+        const caregiverRes = await axios.get(
+          `${API_BASE_URL}/caregivers/getone/${myid}`
+        );
+
+        setCaregiver(caregiverRes.data[0]);
+
+        // ==========================
+        // Get Onboarding Details
+        // ==========================
+        const onboardingRes = await axios.get(
+          `${API_BASE_URL}/caregivers/onboarding/${myid}`
+        );
+
+        if (onboardingRes.data.data) {
+          setOnboarding(onboardingRes.data.data);
+        }
+
       } catch (error) {
+
         console.error(error);
+
       } finally {
+
         setLoading(false);
+
       }
+
     };
 
-    fetchCaregiver();
+    fetchData();
+
   }, [myid]);
 
-  if (loading) return <div className="p-6">Loading...</div>;
-  if (!caregiver)  return <div className="p-6">No caregiver found</div>;
+  if (loading) {
+    return (
+      <div className="p-6 text-center text-lg">
+        Loading...
+      </div>
+    );
+  }
+
+  if (!caregiver) {
+    return (
+      <div className="p-6 text-center text-red-500">
+        No caregiver found
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
 
+    <div className="max-w-6xl mx-auto p-6 pt-12">
+
+      <div className="bg-white shadow-xl rounded-2xl overflow-hidden">
+
+        {/* ========================= */}
         {/* Header */}
-        <div className="bg-[#4E9258] text-white p-6 flex items-center gap-6">
-          <img
-            src={
-              caregiver.photo
-                ? `http://localhost:5000/uploads/${caregiver.photo}`
-                : "https://via.placeholder.com/120"
-            }
-            alt="Profile"
-            className="w-32 h-32 rounded-full object-cover border-4 border-white"
-          />
+        {/* ========================= */}
+
+        <div className="bg-[#8E8E90] text-white p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+
           <div>
-            <h1 className="text-3xl font-bold">{caregiver.full_name}</h1>
-            <p className="text-blue-100">{caregiver.email}</p>
-            <p className="text-blue-100">{caregiver.mobile}</p>
+
+            <h1 className="text-4xl font-bold">
+              {caregiver.first_name} {caregiver.last_name}
+            </h1>
+
+            <p className="mt-2 text-gray-100">
+              {caregiver.email}
+            </p>
+
+            <p className="text-gray-100">
+              {caregiver.mobile}
+            </p>
+
           </div>
+
+          <Link
+            to={`/editonboarding/${myid}`}
+            className="bg-white text-gray-700 px-5 py-3 rounded-xl font-medium hover:bg-gray-100 transition"
+          >
+            Edit Onboarding
+          </Link>
+
         </div>
 
+        {/* ========================= */}
         {/* Body */}
-        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* ========================= */}
+
+        <div className="p-8 space-y-10">
+
+          {/* ========================= */}
+          {/* Personal Information */}
+          {/* ========================= */}
 
           <div>
-            <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
-            <div className="space-y-2">
-              <p><strong>Date of Birth:</strong> {caregiver.dob?.split("T")[0]}</p>
-              <p><strong>Gender:</strong> {caregiver.gender}</p>
-              <p><strong>NIC / Passport:</strong> {caregiver.nic_passport}</p>
-              <p><strong>Address:</strong> {caregiver.address}</p>
-              <p><strong>City:</strong> {caregiver.city}</p>
-              <p><strong>Languages:</strong> {caregiver.languages}</p>
+
+            <h2 className="text-2xl font-semibold mb-5 border-b pb-2">
+              Personal Information
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+              <p>
+                <strong>Date of Birth:</strong>{" "}
+                {caregiver.dob?.split("T")[0]}
+              </p>
+
+              <p>
+                <strong>Gender:</strong>{" "}
+                {caregiver.gender}
+              </p>
+
+              <p>
+                <strong>NIC / Passport:</strong>{" "}
+                {caregiver.nic_passport}
+              </p>
+
+              <p>
+                <strong>Address:</strong>{" "}
+                {caregiver.address}
+              </p>
+
+              <p>
+                <strong>Postcode:</strong>{" "}
+                {caregiver.city}
+              </p>
+
+              <p>
+                <strong>Created At:</strong>{" "}
+                {caregiver.created_at?.split("T")[0]}
+              </p>
+
             </div>
+
           </div>
 
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Professional Information</h2>
-            <div className="space-y-2">
-              <p><strong>Experience:</strong> {caregiver.experience_years}</p>
-              <p><strong>Organization:</strong> {caregiver.organization}</p>
-              <p><strong>Qualification:</strong> {caregiver.has_certifications}</p>
-              <p><strong>Certification List:</strong> {caregiver.certification_list}</p>
-              <p><strong>Availability:</strong> {caregiver.availability}</p>
-              <p><strong>Working Hours:</strong> {caregiver.working_hours}</p>
-              <p><strong>Weekends:</strong> {caregiver.weekends}</p>
-              <p><strong>Preferred Location:</strong> {caregiver.preferred_location}</p>
-            </div>
-          </div>
+          {/* ========================= */}
+          {/* Account Information */}
+          {/* ========================= */}
+
+      
+
+          {/* ========================= */}
+          {/* Onboarding Information */}
+          {/* ========================= */}
 
           <div>
-            <h2 className="text-xl font-semibold mb-4">Health & Safety</h2>
-            <div className="space-y-2">
-              <p><strong>Medical Conditions:</strong> {caregiver.medical_conditions}</p>
-              <p><strong>Criminal Record:</strong> {caregiver.criminal_record}</p>
-              <p><strong>Emergency Contact:</strong> {caregiver.emergency_contact}</p>
-            </div>
-          </div>
 
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Account Information</h2>
-            <div className="space-y-2">
-              <p><strong>Username:</strong> {caregiver.username}</p>
-              <p><strong>Created At:</strong> {caregiver.created_at?.split("T")[0]}</p>
-            </div>
+            <h2 className="text-2xl font-semibold mb-5 border-b pb-2">
+              Onboarding Information
+            </h2>
+
+            {onboarding ? (
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <p>
+                  <strong>Current Work Status:</strong>{" "}
+                  {onboarding.current_work_status}
+                </p>
+
+                <p>
+                  <strong>Looking For Work:</strong>{" "}
+                  {onboarding.looking_for_work}
+                </p>
+
+                <p>
+                  <strong>Applied Jobs Within 4 Weeks:</strong>{" "}
+                  {onboarding.applied_jobs_4weeks}
+                </p>
+
+                <p>
+                  <strong>Industry Interest:</strong>{" "}
+                  {onboarding.industry_interest}
+                </p>
+
+                <p>
+                  <strong>Speak Other Language:</strong>{" "}
+                  {onboarding.speak_other_language}
+                </p>
+
+                <p>
+                  <strong>Other Language:</strong>{" "}
+                  {onboarding.other_language}
+                </p>
+
+                <p>
+                  <strong>Heard About App:</strong>{" "}
+                  {onboarding.heard_about_app}
+                </p>
+
+                <p>
+                  <strong>Reason For Joining:</strong>{" "}
+                  {onboarding.reason_for_joining}
+                </p>
+
+                <p>
+                  <strong>Care For:</strong>{" "}
+                  {onboarding.care_for}
+                </p>
+
+                <p>
+                  <strong>Age Range:</strong>{" "}
+                  {onboarding.cared_person_age_range}
+                </p>
+
+                <p>
+                  <strong>Care Categories:</strong>{" "}
+                  {onboarding.care_categories}
+                </p>
+
+                <p>
+                  <strong>Caregiving Duration:</strong>{" "}
+                  {onboarding.caregiving_duration}
+                </p>
+
+              </div>
+
+            ) : (
+
+              <div className="bg-yellow-50 border border-yellow-300 p-5 rounded-xl">
+
+                <p className="text-yellow-700">
+                  No onboarding information available.
+                </p>
+
+                <Link
+                  to={`/onboarding/${myid}`}
+                  className="inline-block mt-4 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700"
+                >
+                  Add Onboarding
+                </Link>
+
+              </div>
+
+            )}
+
           </div>
 
         </div>
+
       </div>
+
     </div>
+
   );
 };
 

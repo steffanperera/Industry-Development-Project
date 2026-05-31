@@ -42,7 +42,7 @@ export function Features() {
             Why Choose CareAble?
           </h3>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            We're dedicated to supporting caregivers with the tools and opportunities
+            We're dedicated to supporting caregivers with the tools and opportunities 
             they need to succeed.
           </p>
         </div>

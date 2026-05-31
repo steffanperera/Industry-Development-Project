@@ -8,10 +8,10 @@ export function Footer() {
           <div>
             <h4 className="text-white text-xl mb-4">CareAble</h4>
             <p className="text-sm">
-              Connecting compassionate caregivers with families in need.
+              Connecting compassionate caregivers with families in need since 2020.
             </p>
           </div>
-
+          
           <div>
             <h5 className="text-white mb-4">For Caregivers</h5>
             <ul className="space-y-2 text-sm">
@@ -21,7 +21,7 @@ export function Footer() {
               <li><a href="#" className="hover:text-white transition-colors">Training</a></li>
             </ul>
           </div>
-
+          
           <div>
             <h5 className="text-white mb-4">Company</h5>
             <ul className="space-y-2 text-sm">
@@ -31,7 +31,7 @@ export function Footer() {
               <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
             </ul>
           </div>
-
+          
           <div>
             <h5 className="text-white mb-4">Legal</h5>
             <ul className="space-y-2 text-sm">
@@ -41,16 +41,24 @@ export function Footer() {
             </ul>
           </div>
         </div>
-
+        
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm mb-4 md:mb-0">
             © 2026 CareAble. All rights reserved.
           </p>
           <div className="flex gap-4">
-            <a href="#" className="hover:text-white transition-colors"><Facebook size={20} /></a>
-            <a href="#" className="hover:text-white transition-colors"><Twitter size={20} /></a>
-            <a href="#" className="hover:text-white transition-colors"><Instagram size={20} /></a>
-            <a href="#" className="hover:text-white transition-colors"><Linkedin size={20} /></a>
+            <a href="#" className="hover:text-white transition-colors">
+              <Facebook size={20} />
+            </a>
+            <a href="#" className="hover:text-white transition-colors">
+              <Twitter size={20} />
+            </a>
+            <a href="#" className="hover:text-white transition-colors">
+              <Instagram size={20} />
+            </a>
+            <a href="#" className="hover:text-white transition-colors">
+              <Linkedin size={20} />
+            </a>
           </div>
         </div>
       </div>

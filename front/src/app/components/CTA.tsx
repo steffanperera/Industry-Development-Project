@@ -8,13 +8,14 @@ export function CTA() {
           Ready to Start Your Caregiving Journey?
         </h3>
         <p className="text-lg text-green-100 mb-8">
-          Join our community today and start making a difference in people's lives while building
+          Join our community today and start making a difference in people's lives while building 
           a rewarding career.
         </p>
-        <Link to="/register">
-          <button className="px-8 py-4 bg-white text-green-600 rounded-lg hover:bg-gray-50 transition-colors text-lg">
-            Register as a Caregiver
-          </button>
+        <Link
+          to="/register">
+        <button className="px-8 py-4 bg-white text-green-600 rounded-lg hover:bg-gray-50 transition-colors text-lg">
+          Register as a Caregiver
+        </button>
         </Link>
       </div>
     </section>
