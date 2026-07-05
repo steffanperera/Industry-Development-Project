@@ -11,8 +11,8 @@ CareAble is a full-stack web application that allows caregivers to register, com
 | Amarathunga Perera | https://github.com/steffanperera |
 | Poornima Gamage | https://github.com/Poornima-Gamage |
 | Kavin Jayasinghe | https://github.com/knjayasinghe3-cyber |
-| Jubaer Ahamed | https://github.com/jubaerahamedbd |
 | Sachintha Nipun | https://github.com/sachcha99 |
+| Jubaer Ahamed | https://github.com/jubaerahamedbd |
 
 
 ## Table of Contents
