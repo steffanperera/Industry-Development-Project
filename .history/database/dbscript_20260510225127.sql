@@ -6,7 +6,7 @@ Source Server Version : 50505
 Source Host           : localhost:3306
 Source Database       : careable
 
-Target Server Type    : MYSQLcareable
+Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
